@@ -1,0 +1,559 @@
+
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ categoria['nome'] }} | Catálogo de Motos</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+        rel="stylesheet">
+
+    <style>
+
+        :root {
+            --grafite: #202124;
+            --vermelho: #d62828;
+            --vermelho-hover: #b91f1f;
+            --fundo: #f4f5f6;
+            --texto: #252525;
+            --cinza: #64748b;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* CABEÇALHO */
+
+        .topo {
+            background: linear-gradient(
+                135deg,
+                #171819,
+                #303236
+            );
+            color: white;
+            padding: 35px 0;
+            border-bottom: 5px solid var(--vermelho);
+        }
+
+        .topo-icone {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(214, 40, 40, .15);
+            border: 1px solid rgba(214, 40, 40, .35);
+            border-radius: 14px;
+            color: #ff5555;
+            font-size: 2rem;
+        }
+
+        .topo h1 {
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .topo p {
+            color: #d1d5db;
+        }
+
+        /* CONTEÚDO */
+
+        .conteudo {
+            padding-top: 45px;
+            padding-bottom: 45px;
+        }
+
+        /* IDENTIFICAÇÃO DA CATEGORIA */
+
+        .categoria-info {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .categoria-selo {
+            display: inline-block;
+            background: #fceaea;
+            color: var(--vermelho);
+            padding: 7px 13px;
+            border-radius: 30px;
+            font-size: .75rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .categoria-info h2 {
+            color: var(--grafite);
+            font-weight: 800;
+        }
+
+        .descricao-categoria {
+            max-width: 700px;
+            color: var(--cinza);
+            line-height: 1.6;
+        }
+
+        .contador {
+            background: #f1f2f3;
+            color: var(--grafite);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* BOTÃO VOLTAR */
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #d1d5db;
+            color: var(--grafite);
+            background: white;
+            padding: 10px 16px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .btn-voltar:hover {
+            background: var(--grafite);
+            color: white;
+        }
+
+        /* CARTÕES DAS MOTOS */
+
+        .produto-card {
+            height: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, .05);
+            transition: transform .25s ease,
+                        box-shadow .25s ease;
+        }
+
+        .produto-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .12);
+        }
+
+        /* IMAGEM DA MOTO */
+
+        .produto-imagem-container {
+            height: 220px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+
+        .produto-imagem {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 15px;
+            transition: transform .35s ease;
+        }
+
+        .produto-card:hover .produto-imagem {
+            transform: scale(1.05);
+        }
+
+        .produto-sem-imagem {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eceef0;
+            color: #a1a1aa;
+            font-size: 3.5rem;
+        }
+
+        /* CORPO DO CARTÃO */
+
+        .produto-card .card-body {
+            padding: 22px;
+        }
+
+        .produto-card h3 {
+            color: var(--grafite);
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .produto-categoria {
+            color: var(--cinza);
+            font-size: .85rem;
+            margin-bottom: 18px;
+        }
+
+        .produto-categoria i {
+            color: var(--vermelho);
+        }
+
+        /* PREÇO */
+
+        .preco-label {
+            color: var(--cinza);
+            font-size: .8rem;
+            margin-bottom: 3px;
+        }
+
+        .preco {
+            color: var(--vermelho);
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .linha-detalhe {
+            height: 3px;
+            width: 45px;
+            background: var(--vermelho);
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* ESTADO VAZIO */
+
+        .estado-vazio {
+            background: white;
+            border-radius: 16px;
+            padding: 55px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .05);
+        }
+
+        .estado-vazio i {
+            font-size: 3.5rem;
+            color: #9ca3af;
+        }
+
+        .estado-vazio h3 {
+            color: var(--grafite);
+            font-weight: 700;
+            margin-top: 15px;
+        }
+
+        /* RODAPÉ */
+
+        footer {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 576px) {
+
+            .topo {
+                padding: 28px 0;
+            }
+
+            .topo h1 {
+                font-size: 1.4rem;
+            }
+
+            .topo-icone {
+                width: 48px;
+                height: 48px;
+                font-size: 1.6rem;
+            }
+
+            .conteudo {
+                padding-top: 25px;
+            }
+
+            .categoria-info {
+                padding: 19px;
+            }
+
+            .categoria-info h2 {
+                font-size: 1.35rem;
+            }
+
+            .contador {
+                font-size: .8rem;
+            }
+
+            .produto-imagem-container {
+                height: 230px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+
+    <header class="topo">
+
+        <div class="container">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="topo-icone">
+                    <i class="bi bi-speedometer2"></i>
+                </div>
+
+                <div>
+
+                    <h1 class="h2 mb-1">
+                        Catálogo de Motos
+                    </h1>
+
+                    <p class="mb-0">
+                        Conheça nossos modelos e encontre sua próxima moto.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+
+    <main class="container conteudo">
+
+        <!-- NAVEGAÇÃO -->
+
+        <div class="mb-4">
+
+            <a
+                href="{{ url_for('catalogoPublico') }}"
+                class="btn-voltar">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Voltar às categorias
+
+            </a>
+
+        </div>
+
+        <!-- IDENTIFICAÇÃO DA CATEGORIA -->
+
+        <section class="categoria-info mb-4">
+
+            <div class="d-flex flex-wrap justify-content-between
+                        align-items-center gap-3">
+
+                <div>
+
+                    <span class="categoria-selo">
+
+                        <i class="bi bi-tag me-1"></i>
+
+                        CATEGORIA SELECIONADA
+
+                    </span>
+
+                    <h2 class="h3 mb-2">
+                        {{ categoria['nome'] }}
+                    </h2>
+
+                    {% if categoria['descricao'] %}
+
+                        <p class="descricao-categoria mb-0">
+                            {{ categoria['descricao'] }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="descricao-categoria mb-0">
+                            Confira os modelos de motocicletas
+                            disponíveis nesta categoria.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="contador">
+
+                    <i class="bi bi-motorcycle me-1"></i>
+
+                    {{ produtos|length }}
+
+                    {% if produtos|length == 1 %}
+                        moto disponível
+                    {% else %}
+                        motos disponíveis
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- LISTAGEM DE MOTOCICLETAS -->
+
+        <div class="row g-4">
+
+            {% for produto in produtos %}
+
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                    <article class="card produto-card">
+
+                        <!-- IMAGEM -->
+
+                        {% if produto['imagem'] %}
+
+                            <div class="produto-imagem-container">
+
+                                <img
+                                    src="data:image/jpeg;base64,{{ produto['imagem'] }}"
+                                    class="produto-imagem"
+                                    alt="{{ produto['nome'] }}"
+                                    loading="lazy"
+                                >
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="produto-sem-imagem">
+
+                                <i class="bi bi-motorcycle"></i>
+
+                            </div>
+
+                        {% endif %}
+
+                        <!-- INFORMAÇÕES -->
+
+                        <div class="card-body d-flex flex-column">
+
+                            <div class="linha-detalhe"></div>
+
+                            <h3>
+                                {{ produto['nome'] }}
+                            </h3>
+
+                            <p class="produto-categoria">
+
+                                <i class="bi bi-tag-fill me-1"></i>
+
+                                {{ categoria['nome'] }}
+
+                            </p>
+
+                            <!-- PREÇO -->
+
+                            <div class="mt-auto">
+
+                                <p class="preco-label">
+                                    Preço anunciado
+                                </p>
+
+                                <p class="preco">
+
+                                    R$
+
+                                    {{ "%.2f"|format(produto['preco']|float)|replace('.', ',') }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            {% else %}
+
+                <!-- NENHUMA MOTO CADASTRADA -->
+
+                <div class="col-12">
+
+                    <div class="estado-vazio">
+
+                        <i class="bi bi-motorcycle"></i>
+
+                        <h3>
+                            Nenhuma moto disponível
+                        </h3>
+
+                        <p class="text-secondary mb-4">
+
+                            Ainda não existem motocicletas cadastradas
+                            nesta categoria.
+
+                            Volte e consulte outras categorias disponíveis.
+
+                        </p>
+
+                        <a
+                            href="{{ url_for('catalogoPublico') }}"
+                            class="btn btn-dark">
+
+                            <i class="bi bi-arrow-left me-2"></i>
+
+                            Voltar às categorias
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+    <!-- RODAPÉ -->
+
+    <footer class="py-4 mt-4">
+
+        <div class="container text-center text-secondary">
+
+            <small>
+                &copy; 2026 Catálogo de Motos.
+                Todos os direitos reservados.
+            </small>
+
+        </div>
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

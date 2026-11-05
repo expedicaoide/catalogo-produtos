@@ -1,0 +1,138 @@
+
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-12 col-md-8 col-lg-6">
+
+        <div class="card shadow-sm border-0">
+
+            <!-- Cabeçalho -->
+
+            <div class="card-header text-bg-danger">
+
+                <h3 class="card-title mb-0">
+
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+
+                    Confirmar exclusão
+
+                </h3>
+
+            </div>
+
+
+            <!-- Conteúdo -->
+
+            <div class="card-body text-center p-4">
+
+                <div class="mb-3">
+
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle"
+                         style="width: 85px; height: 85px; background-color: #fce8e8;">
+
+                        <i
+                            class="bi bi-trash3 text-danger"
+                            style="font-size: 2.8rem;">
+                        </i>
+
+                    </div>
+
+                </div>
+
+
+                <h4 class="fw-bold">
+                    Deseja realmente excluir esta categoria?
+                </h4>
+
+                <p class="text-body-secondary">
+                    Você está prestes a remover uma categoria do catálogo de motocicletas.
+                </p>
+
+
+                {% if categoria %}
+
+                    <div class="border rounded p-3 mt-4">
+
+                        <p class="text-body-secondary small mb-1">
+                            Categoria selecionada
+                        </p>
+
+                        <p class="fs-5 fw-bold mb-2">
+                            {{ categoria.nome }}
+                        </p>
+
+                        {% if categoria.descricao %}
+
+                            <p class="text-body-secondary mb-0">
+                                {{ categoria.descricao }}
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Aviso -->
+
+                <div class="alert alert-warning text-start mt-4 mb-0">
+
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+
+                    <strong>Atenção!</strong>
+
+                    <p class="mb-0 mt-1">
+                        Essa ação não poderá ser desfeita. Verifique se esta categoria não está sendo utilizada por motocicletas cadastradas.
+                    </p>
+
+                </div>
+
+
+                <!-- Botões -->
+
+                <form method="POST">
+
+                    <div class="d-flex flex-column
+                                flex-sm-row
+                                justify-content-center
+                                gap-2
+                                mt-4">
+
+                        <a
+                            href="{{ url_for('listarCategoria') }}"
+                            class="btn btn-outline-secondary">
+
+                            <i class="bi bi-arrow-left me-1"></i>
+
+                            Cancelar
+
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger">
+
+                            <i class="bi bi-trash me-1"></i>
+
+                            Confirmar Exclusão
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

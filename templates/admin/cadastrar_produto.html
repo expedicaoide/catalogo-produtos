@@ -1,0 +1,294 @@
+
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<div class="d-flex flex-column flex-md-row
+            align-items-md-center justify-content-between
+            gap-3 mb-4">
+
+    <div>
+
+        <h1 class="mb-1">
+            Cadastrar Motocicleta
+        </h1>
+
+        <p class="text-body-secondary mb-0">
+            Adicione uma nova motocicleta ao catálogo.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white border-bottom">
+
+        <h3 class="card-title mb-0">
+
+            <i class="bi bi-motorcycle me-2 text-danger"></i>
+
+            Nova motocicleta
+
+        </h3>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data">
+
+            <div class="row g-3">
+
+                <!-- Nome da motocicleta -->
+
+                <div class="col-12">
+
+                    <label
+                        for="nome"
+                        class="form-label fw-semibold">
+
+                        Nome da Motocicleta
+
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nome"
+                        name="nome"
+                        placeholder="Ex.: Honda CG 160 Titan"
+                        required>
+
+                </div>
+
+
+                <!-- Preço -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="preco"
+                        class="form-label fw-semibold">
+
+                        Preço
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            R$
+                        </span>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            class="form-control"
+                            id="preco"
+                            name="preco"
+                            placeholder="25.900,00"
+                            required>
+
+                    </div>
+
+                    <div class="form-text">
+                        Informe o valor de venda da motocicleta.
+                    </div>
+
+                </div>
+
+
+                <!-- Categoria -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="id_categoria"
+                        class="form-label fw-semibold">
+
+                        Categoria
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        id="id_categoria"
+                        name="id_categoria"
+                        required>
+
+                        <option value="">
+                            Selecione uma categoria
+                        </option>
+
+                        {% for categoria in categorias %}
+
+                            <option value="{{ categoria.id }}">
+                                {{ categoria.nome }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="ativo"
+                        class="form-label fw-semibold">
+
+                        Status no catálogo
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        id="ativo"
+                        name="ativo">
+
+                        <option value="True">
+                            Ativa
+                        </option>
+
+                        <option value="False">
+                            Inativa
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Imagem -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="imagem"
+                        class="form-label fw-semibold">
+
+                        Foto da Motocicleta
+
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        id="imagem"
+                        name="imagem"
+                        accept="image/*">
+
+                    <div class="form-text">
+                        Selecione uma foto para apresentar a motocicleta no catálogo.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Pré-visualização da imagem -->
+
+            <div class="mt-4" id="preview-container" style="display: none;">
+
+                <label class="form-label fw-semibold">
+                    Pré-visualização da foto
+                </label>
+
+                <div>
+                    <img
+                        id="preview-imagem"
+                        src=""
+                        alt="Pré-visualização da motocicleta"
+                        class="img-thumbnail"
+                        style="max-width: 280px; max-height: 200px; object-fit: contain;">
+                </div>
+
+            </div>
+
+
+            <!-- Botões -->
+
+            <div class="d-flex flex-column flex-sm-row
+                        justify-content-end
+                        gap-2
+                        mt-4">
+
+                <a
+                    href="{{ url_for('listarProdutos') }}"
+                    class="btn btn-outline-secondary">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+
+                    Cancelar
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-danger">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Cadastrar Motocicleta
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    document.getElementById('imagem').addEventListener('change', function(event) {
+
+        const arquivo = event.target.files[0];
+
+        const previewContainer = document.getElementById('preview-container');
+
+        const previewImagem = document.getElementById('preview-imagem');
+
+        if (arquivo) {
+
+            const leitor = new FileReader();
+
+            leitor.onload = function(e) {
+
+                previewImagem.src = e.target.result;
+
+                previewContainer.style.display = 'block';
+
+            };
+
+            leitor.readAsDataURL(arquivo);
+
+        } else {
+
+            previewImagem.src = '';
+
+            previewContainer.style.display = 'none';
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

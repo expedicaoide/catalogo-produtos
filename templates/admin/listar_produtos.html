@@ -1,0 +1,558 @@
+
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<style>
+    .page-title {
+        color: #202124;
+        font-weight: 700;
+    }
+
+    .card-motos {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card-motos .card-header {
+        background: #202124;
+        color: #ffffff;
+        padding: 16px 20px;
+        border-bottom: 3px solid #d62828;
+    }
+
+    .btn-moto {
+        background: #d62828;
+        border-color: #d62828;
+        color: #ffffff;
+    }
+
+    .btn-moto:hover {
+        background: #b91f1f;
+        border-color: #b91f1f;
+        color: #ffffff;
+    }
+
+    .table-motos thead th {
+        background: #f1f2f3;
+        color: #343a40;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .table-motos td {
+        vertical-align: middle;
+    }
+
+    .moto-image {
+        width: 65px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+    }
+
+    .filter-area {
+        background: #fafafa;
+    }
+
+    .pagination .page-item.active .page-link {
+        background: #d62828;
+        border-color: #d62828;
+    }
+
+    .pagination .page-link {
+        color: #202124;
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #ffffff;
+    }
+
+    .empty-state {
+        padding: 45px 20px;
+    }
+
+    .empty-state i {
+        font-size: 3.5rem;
+        color: #adb5bd;
+    }
+</style>
+
+<!-- CABEÇALHO -->
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+
+    <div>
+        <h1 class="page-title mb-1">
+            <i class="bi bi-motorcycle me-2"></i>
+            Motocicletas cadastradas
+        </h1>
+
+        <p class="text-body-secondary mb-0">
+            Gerencie as motocicletas disponíveis no catálogo.
+        </p>
+    </div>
+
+    <div>
+        <a href="{{ url_for('cadastrarProduto') }}" class="btn btn-moto">
+            <i class="bi bi-plus-circle me-1"></i>
+            Nova Motocicleta
+        </a>
+    </div>
+
+</div>
+
+<!-- CARD PRINCIPAL -->
+<div class="card shadow-sm card-motos">
+
+    <div class="card-header">
+        <h3 class="card-title mb-0">
+            <i class="bi bi-motorcycle me-2"></i>
+            Gerenciamento de Motocicletas
+        </h3>
+    </div>
+
+    <div class="card-body p-0">
+
+        <!-- PESQUISA E FILTROS -->
+        <div class="filter-area p-3 border-bottom">
+
+            <form method="GET" action="{{ url_for('listarProdutos') }}">
+
+                <div class="row g-3 align-items-end">
+
+                    <!-- PESQUISA -->
+                    <div class="col-12 col-md-5">
+
+                        <label for="busca" class="form-label fw-semibold">
+                            Pesquisar motocicleta
+                        </label>
+
+                        <input
+                            type="search"
+                            id="busca"
+                            name="busca"
+                            class="form-control"
+                            placeholder="Digite o nome da motocicleta..."
+                            value="{{ busca }}">
+
+                    </div>
+
+                    <!-- CATEGORIA -->
+                    <div class="col-12 col-md-3">
+
+                        <label for="categoria" class="form-label fw-semibold">
+                            Categoria
+                        </label>
+
+                        <select id="categoria" name="categoria" class="form-select">
+
+                            <option value="">Todas as categorias</option>
+
+                            {% for categoria in categorias %}
+
+                                <option
+                                    value="{{ categoria.id }}"
+                                    {% if categoria_selecionada|string == categoria.id|string %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ categoria.nome }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="col-12 col-md-2">
+
+                        <label for="status" class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select id="status" name="status" class="form-select">
+
+                            <option value="">Todos</option>
+
+                            <option
+                                value="ativo"
+                                {% if status_selecionado == 'ativo' %}selected{% endif %}>
+                                Ativas
+                            </option>
+
+                            <option
+                                value="inativo"
+                                {% if status_selecionado == 'inativo' %}selected{% endif %}>
+                                Inativas
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- BOTÕES -->
+                    <div class="col-12 col-md-2 d-flex gap-2">
+
+                        <button type="submit" class="btn btn-moto flex-grow-1">
+                            <i class="bi bi-search me-1"></i>
+                            Buscar
+                        </button>
+
+                        <a
+                            href="{{ url_for('listarProdutos') }}"
+                            class="btn btn-outline-secondary"
+                            title="Limpar filtros"
+                            aria-label="Limpar filtros">
+
+                            <i class="bi bi-x-lg"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- RESUMO DOS RESULTADOS -->
+        {% if total_produtos > 0 %}
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 p-3 border-bottom">
+
+                <span class="text-body-secondary small">
+                    <i class="bi bi-list-ul me-1"></i>
+
+                    Exibindo {{ (pagina - 1) * 10 + 1 }}
+                    a {{ [(pagina * 10), total_produtos]|min }}
+                    de {{ total_produtos }} motocicleta(s)
+                </span>
+
+                <span class="text-body-secondary small">
+                    Página {{ pagina }} de {{ total_paginas }}
+                </span>
+
+            </div>
+
+        {% endif %}
+
+        <!-- TABELA DE MOTOCICLETAS -->
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover table-motos align-middle mb-0">
+
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Motocicleta</th>
+                        <th scope="col">Imagem</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Preço</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-end">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for produto in produtos %}
+
+                        <tr>
+
+                            <!-- ID -->
+                            <th scope="row">
+                                {{ produto.id }}
+                            </th>
+
+                            <!-- NOME -->
+                            <td class="fw-semibold">
+                                {{ produto.nome }}
+                            </td>
+
+                            <!-- IMAGEM -->
+                            <td>
+
+                                {% if produto.imagem %}
+
+                                    <img
+                                        src="data:image/jpeg;base64,{{ produto.imagem }}"
+                                        class="moto-image"
+                                        alt="Imagem da motocicleta {{ produto.nome }}">
+
+                                {% else %}
+
+                                    <span class="text-body-secondary small">
+                                        <i class="bi bi-image me-1"></i>
+                                        Sem imagem
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- CATEGORIA -->
+                            <td>
+
+                                {% if produto.nome_categoria %}
+
+                                    <span class="badge text-bg-light border">
+                                        <i class="bi bi-tag me-1"></i>
+                                        {{ produto.nome_categoria }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-body-secondary">
+                                        Sem categoria
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- PREÇO -->
+                            <td class="fw-semibold">
+                                R$ {{ "%.2f"|format(produto.preco or 0) }}
+                            </td>
+
+                            <!-- STATUS -->
+                            <td>
+
+                                {% if produto.ativo == 'True' or produto.ativo == 1 %}
+
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Ativa
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>
+                                        Inativa
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- AÇÕES -->
+                            <td class="text-end">
+
+                                <div
+                                    class="btn-group"
+                                    role="group"
+                                    aria-label="Ações da motocicleta {{ produto.nome }}">
+
+                                    <!-- EDITAR -->
+                                    <a
+                                        href="{{ url_for('editarProduto', id=produto.id) }}"
+                                        class="btn btn-sm btn-warning"
+                                        aria-label="Editar {{ produto.nome }}"
+                                        title="Editar">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                        <span class="d-none d-lg-inline ms-1">
+                                            Editar
+                                        </span>
+
+                                    </a>
+
+                                    <!-- EXCLUIR -->
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('excluirProduto', id=produto.id) }}"
+                                        onsubmit="return confirm('Deseja realmente excluir esta motocicleta?');"
+                                        class="d-inline">
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-danger"
+                                            aria-label="Excluir {{ produto.nome }}"
+                                            title="Excluir">
+
+                                            <i class="bi bi-trash"></i>
+
+                                            <span class="d-none d-lg-inline ms-1">
+                                                Excluir
+                                            </span>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <!-- ESTADO VAZIO -->
+                        <tr>
+
+                            <td colspan="7" class="text-center empty-state">
+
+                                <div class="text-body-secondary">
+
+                                    <i class="bi bi-motorcycle"></i>
+
+                                    <h5 class="mt-3">
+
+                                        {% if busca or categoria_selecionada or status_selecionado %}
+                                            Nenhuma motocicleta encontrada
+                                        {% else %}
+                                            Nenhuma motocicleta cadastrada
+                                        {% endif %}
+
+                                    </h5>
+
+                                    <p class="mb-3">
+
+                                        {% if busca or categoria_selecionada or status_selecionado %}
+                                            Tente alterar os filtros ou limpar a pesquisa.
+                                        {% else %}
+                                            Cadastre a primeira motocicleta para começar.
+                                        {% endif %}
+
+                                    </p>
+
+                                    {% if busca or categoria_selecionada or status_selecionado %}
+
+                                        <a
+                                            href="{{ url_for('listarProdutos') }}"
+                                            class="btn btn-outline-secondary">
+
+                                            <i class="bi bi-x-circle me-1"></i>
+                                            Limpar filtros
+
+                                        </a>
+
+                                    {% else %}
+
+                                        <a
+                                            href="{{ url_for('cadastrarProduto') }}"
+                                            class="btn btn-moto">
+
+                                            <i class="bi bi-plus-circle me-1"></i>
+                                            Nova Motocicleta
+
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- PAGINAÇÃO -->
+        {% if total_paginas > 1 %}
+
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 p-3">
+
+                <span class="text-body-secondary small">
+                    Página {{ pagina }} de {{ total_paginas }}
+                </span>
+
+                <nav aria-label="Paginação das motocicletas">
+
+                    <ul class="pagination pagination-sm mb-0">
+
+                        <!-- ANTERIOR -->
+                        <li class="page-item {% if pagina <= 1 %}disabled{% endif %}">
+
+                            <a
+                                class="page-link"
+                                href="{{ url_for(
+                                    'listarProdutos',
+                                    pagina=pagina-1,
+                                    busca=busca,
+                                    categoria=categoria_selecionada,
+                                    status=status_selecionado
+                                ) if pagina > 1 else '#' }}"
+                                {% if pagina <= 1 %}aria-disabled="true" tabindex="-1"{% endif %}>
+
+                                <i class="bi bi-chevron-left"></i>
+                                Anterior
+
+                            </a>
+
+                        </li>
+
+                        <!-- NÚMEROS DAS PÁGINAS -->
+                        {% for numero in range(1, total_paginas + 1) %}
+
+                            <li class="page-item {% if numero == pagina %}active{% endif %}">
+
+                                <a
+                                    class="page-link"
+                                    href="{{ url_for(
+                                        'listarProdutos',
+                                        pagina=numero,
+                                        busca=busca,
+                                        categoria=categoria_selecionada,
+                                        status=status_selecionado
+                                    ) }}"
+                                    {% if numero == pagina %}aria-current="page"{% endif %}>
+
+                                    {{ numero }}
+
+                                </a>
+
+                            </li>
+
+                        {% endfor %}
+
+                        <!-- PRÓXIMA -->
+                        <li class="page-item {% if pagina >= total_paginas %}disabled{% endif %}">
+
+                            <a
+                                class="page-link"
+                                href="{{ url_for(
+                                    'listarProdutos',
+                                    pagina=pagina+1,
+                                    busca=busca,
+                                    categoria=categoria_selecionada,
+                                    status=status_selecionado
+                                ) if pagina < total_paginas else '#' }}"
+                                {% if pagina >= total_paginas %}aria-disabled="true" tabindex="-1"{% endif %}>
+
+                                Próxima
+                                <i class="bi bi-chevron-right"></i>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

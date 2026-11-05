@@ -1,0 +1,315 @@
+
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<div class="d-flex flex-column flex-md-row
+            align-items-md-center justify-content-between
+            gap-3 mb-4">
+
+    <div>
+
+        <h1 class="mb-1 fw-bold">
+            <i class="bi bi-pencil-square text-danger me-2"></i>
+            Editar Categoria
+        </h1>
+
+        <p class="text-body-secondary mb-0">
+            Atualize as informações da categoria do catálogo de motocicletas.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white border-bottom">
+
+        <h3 class="card-title mb-0">
+
+            <i class="bi bi-tags me-2 text-danger"></i>
+
+            Informações da categoria
+
+        </h3>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data">
+
+            <div class="row g-3">
+
+                <!-- Nome -->
+
+                <div class="col-12">
+
+                    <label
+                        for="nome_categoria"
+                        class="form-label fw-semibold">
+
+                        Nome da Categoria
+
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nome_categoria"
+                        name="nome_categoria"
+                        value="{{ categoria.nome }}"
+                        placeholder="Ex.: Street, Sport, Trail ou Scooter"
+                        required>
+
+                    <div class="form-text">
+                        Informe o nome que identificará essa categoria de motocicletas.
+                    </div>
+
+                </div>
+
+
+                <!-- Descrição -->
+
+                <div class="col-12">
+
+                    <label
+                        for="descricao"
+                        class="form-label fw-semibold">
+
+                        Descrição
+
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        id="descricao"
+                        name="descricao"
+                        rows="4"
+                        placeholder="Descreva as características desta categoria..."
+                        required>{{ categoria.descricao }}</textarea>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="ativo"
+                        class="form-label fw-semibold">
+
+                        Status da Categoria
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="ativo"
+                        id="ativo">
+
+                        <option
+                            value="True"
+                            {% if categoria.ativo == 'True' or categoria.ativo == 1 %}
+                                selected
+                            {% endif %}>
+
+                            Ativa
+
+                        </option>
+
+                        <option
+                            value="False"
+                            {% if categoria.ativo == 'False' or categoria.ativo == 0 %}
+                                selected
+                            {% endif %}>
+
+                            Inativa
+
+                        </option>
+
+                    </select>
+
+                    <div class="form-text">
+                        Categorias inativas podem deixar de ser exibidas no catálogo público, conforme a regra do sistema.
+                    </div>
+
+                </div>
+
+
+                <!-- Imagem atual -->
+
+                <div class="col-12">
+
+                    <label class="form-label fw-semibold">
+                        Imagem Atual
+                    </label>
+
+                    {% if categoria.imagem %}
+
+                        <div class="mt-2 p-3 border rounded bg-light d-inline-block">
+
+                            <img
+                                src="data:image/jpeg;base64,{{ categoria.imagem }}"
+                                class="img-thumbnail border-0"
+                                style="width: 240px; height: 180px; object-fit: cover;"
+                                alt="Imagem atual da categoria {{ categoria.nome }}">
+
+                            <p class="text-body-secondary small mb-0 mt-2 text-center">
+                                Imagem cadastrada
+                            </p>
+
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="border rounded p-4 text-center
+                                   text-body-secondary">
+
+                            <i
+                                class="bi bi-image"
+                                style="font-size: 2.5rem;">
+                            </i>
+
+                            <p class="mb-0 mt-2">
+                                Nenhuma imagem cadastrada.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Nova imagem -->
+
+                <div class="col-12">
+
+                    <label
+                        for="imagem"
+                        class="form-label fw-semibold">
+
+                        Substituir Imagem
+
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        id="imagem"
+                        name="imagem"
+                        accept="image/*">
+
+                    <div class="form-text">
+                        Selecione uma nova imagem somente se desejar substituir a imagem atual.
+                    </div>
+
+                </div>
+
+
+                <!-- Pré-visualização da nova imagem -->
+
+                <div class="col-12" id="preview-container" style="display: none;">
+
+                    <label class="form-label fw-semibold">
+                        Pré-visualização da nova imagem
+                    </label>
+
+                    <div>
+
+                        <img
+                            id="preview-imagem"
+                            src=""
+                            alt="Pré-visualização da nova imagem"
+                            class="img-thumbnail"
+                            style="width: 240px; height: 180px; object-fit: cover;">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Botões -->
+
+            <div class="d-flex flex-column flex-sm-row
+                        justify-content-end
+                        gap-2
+                        mt-4">
+
+                <a
+                    href="{{ url_for('listarCategoria') }}"
+                    class="btn btn-outline-secondary">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+
+                    Voltar
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-danger">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Salvar Alterações
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    document.getElementById('imagem').addEventListener('change', function(event) {
+
+        const arquivo = event.target.files[0];
+
+        const previewContainer = document.getElementById('preview-container');
+
+        const previewImagem = document.getElementById('preview-imagem');
+
+        if (arquivo) {
+
+            const leitor = new FileReader();
+
+            leitor.onload = function(e) {
+
+                previewImagem.src = e.target.result;
+
+                previewContainer.style.display = 'block';
+
+            };
+
+            leitor.readAsDataURL(arquivo);
+
+        } else {
+
+            previewImagem.src = '';
+
+            previewContainer.style.display = 'none';
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

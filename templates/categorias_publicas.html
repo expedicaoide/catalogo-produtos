@@ -1,0 +1,492 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Categorias | Catálogo de Motos</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --grafite: #202124;
+            --vermelho: #d62828;
+            --vermelho-hover: #b91f1f;
+            --fundo: #f4f5f6;
+            --texto: #252525;
+            --cinza: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* CABEÇALHO */
+
+        .cabecalho {
+            background: linear-gradient(
+                135deg,
+                #171819,
+                #303236
+            );
+            color: white;
+            padding: 48px 20px 65px;
+            text-align: center;
+            border-bottom: 5px solid var(--vermelho);
+        }
+
+        .cabecalho h1 {
+            font-size: clamp(1.8rem, 4vw, 2.7rem);
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .cabecalho h1 i {
+            color: var(--vermelho);
+        }
+
+        .cabecalho p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: #d1d5db;
+        }
+
+        .identificacao {
+            display: inline-block;
+            background: rgba(214, 40, 40, .15);
+            color: #ff7777;
+            border: 1px solid rgba(214, 40, 40, .35);
+            border-radius: 30px;
+            padding: 7px 16px;
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        /* CONTEÚDO */
+
+        .conteudo {
+            max-width: 1200px;
+            margin: -25px auto 0;
+            padding: 0 20px 45px;
+        }
+
+        /* BARRA SUPERIOR */
+
+        .barra-superior {
+            background: white;
+            padding: 22px 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 22px rgba(0, 0, 0, .07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .barra-superior h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--grafite);
+        }
+
+        .contador {
+            color: var(--cinza);
+            font-size: .9rem;
+            margin-top: 6px;
+        }
+
+        .btn-inicio {
+            border: 1px solid #d1d5db;
+            color: var(--grafite);
+            border-radius: 9px;
+            padding: 9px 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: .2s;
+            white-space: nowrap;
+        }
+
+        .btn-inicio:hover {
+            background: var(--grafite);
+            color: white;
+        }
+
+        /* GRADE DE CATEGORIAS */
+
+        .grade-categorias {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(250px, 1fr)
+            );
+            gap: 24px;
+        }
+
+        /* CARTÃO */
+
+        .cartao-categoria {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .05);
+            transition: transform .25s ease,
+                        box-shadow .25s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cartao-categoria:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .12);
+        }
+
+        /* IMAGEM */
+
+        .imagem-categoria {
+            height: 205px;
+            background: #e9eaec;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .imagem-categoria::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--vermelho);
+        }
+
+        .imagem-categoria img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .4s ease;
+        }
+
+        .cartao-categoria:hover .imagem-categoria img {
+            transform: scale(1.06);
+        }
+
+        .imagem-padrao {
+            font-size: 4rem;
+            color: #a1a1aa;
+        }
+
+        /* CORPO DO CARTÃO */
+
+        .corpo-cartao {
+            padding: 23px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .corpo-cartao h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--grafite);
+            margin-bottom: 10px;
+        }
+
+        .corpo-cartao p {
+            color: var(--cinza);
+            font-size: .94rem;
+            line-height: 1.6;
+            margin-bottom: 22px;
+            flex: 1;
+        }
+
+        /* BOTÃO */
+
+        .botao-acessar {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 13px 16px;
+            background: var(--vermelho);
+            color: white;
+            text-decoration: none;
+            border-radius: 9px;
+            font-weight: 700;
+            transition: background .2s ease;
+        }
+
+        .botao-acessar:hover {
+            background: var(--vermelho-hover);
+            color: white;
+        }
+
+        /* ESTADO VAZIO */
+
+        .estado-vazio {
+            background: white;
+            border-radius: 16px;
+            padding: 55px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .05);
+        }
+
+        .estado-vazio i {
+            font-size: 3.5rem;
+            color: #9ca3af;
+        }
+
+        .estado-vazio h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-top: 15px;
+            color: var(--grafite);
+        }
+
+        /* RODAPÉ */
+
+        .rodape {
+            text-align: center;
+            padding: 25px 15px;
+            color: #778080;
+            font-size: .9rem;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 576px) {
+
+            .cabecalho {
+                padding: 36px 16px 52px;
+            }
+
+            .conteudo {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .barra-superior {
+                padding: 17px;
+                align-items: flex-start;
+            }
+
+            .barra-superior h2 {
+                font-size: 1.05rem;
+            }
+
+            .grade-categorias {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .imagem-categoria {
+                height: 220px;
+            }
+
+            .btn-inicio {
+                padding: 8px 11px;
+                font-size: .85rem;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+
+    <header class="cabecalho">
+
+        <div class="identificacao">
+            CATÁLOGO DE MOTOCICLETAS
+        </div>
+
+        <h1>
+            <i class="bi bi-speedometer2"></i>
+            Nossas Categorias
+        </h1>
+
+        <p>
+            Explore diferentes estilos e encontre a moto ideal para você.
+        </p>
+
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+
+    <main class="conteudo">
+
+        <!-- BARRA SUPERIOR -->
+
+        <section class="barra-superior">
+
+            <div>
+
+                <h2>
+                    <i class="bi bi-collection me-2"
+                       style="color:#d62828;"></i>
+                    Categorias disponíveis
+                </h2>
+
+                <div class="contador">
+
+                    {{ categorias|length }}
+
+                    {% if categorias|length == 1 %}
+                        categoria encontrada
+                    {% else %}
+                        categorias encontradas
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('index') }}"
+               class="btn-inicio">
+
+                <i class="bi bi-house-door me-1"></i>
+                Início
+
+            </a>
+
+        </section>
+
+        <!-- LISTAGEM DE CATEGORIAS -->
+
+        {% if categorias %}
+
+            <section class="grade-categorias">
+
+                {% for categoria in categorias %}
+
+                    <article class="cartao-categoria">
+
+                        <!-- IMAGEM DA CATEGORIA -->
+
+                        <div class="imagem-categoria">
+
+                            {% if categoria['imagem'] %}
+
+                                <img
+                                    src="data:image/jpeg;base64,{{ categoria['imagem'] }}"
+                                    alt="Categoria {{ categoria['nome'] }}"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <i class="bi bi-image imagem-padrao"></i>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- INFORMAÇÕES -->
+
+                        <div class="corpo-cartao">
+
+                            <h3>
+                                {{ categoria['nome'] }}
+                            </h3>
+
+                            <p>
+
+                                {% if categoria['descricao'] %}
+
+                                    {{ categoria['descricao'] }}
+
+                                {% else %}
+
+                                    Confira os modelos de motocicletas
+                                    disponíveis nesta categoria.
+
+                                {% endif %}
+
+                            </p>
+
+                            <!-- ACESSAR CATEGORIA -->
+
+                            <a
+                                href="{{ url_for('produtosDaCategoria', categoria_id=categoria['id']) }}"
+                                class="botao-acessar"
+                            >
+
+                                Ver motocicletas
+
+                                <i class="bi bi-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </section>
+
+        {% else %}
+
+            <!-- NENHUMA CATEGORIA CADASTRADA -->
+
+            <section class="estado-vazio">
+
+                <i class="bi bi-motorcycle"></i>
+
+                <h3>
+                    Nenhuma categoria disponível
+                </h3>
+
+                <p class="text-secondary mb-0">
+
+                    Ainda não existem categorias ativas no catálogo.
+                    Volte em breve para conferir as novidades.
+
+                </p>
+
+            </section>
+
+        {% endif %}
+
+    </main>
+
+    <!-- RODAPÉ -->
+
+    <footer class="rodape">
+
+        Catálogo de Motos &copy; 2026.
+        Todos os direitos reservados.
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

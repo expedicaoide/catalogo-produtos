@@ -1,0 +1,368 @@
+
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<div class="d-flex flex-column flex-md-row
+            align-items-md-center justify-content-between
+            gap-3 mb-4">
+
+    <div>
+
+        <h1 class="mb-1 fw-bold">
+            <i class="bi bi-pencil-square text-danger me-2"></i>
+            Editar Motocicleta
+        </h1>
+
+        <p class="text-body-secondary mb-0">
+            Altere as informações da motocicleta
+            <strong>#{{ produto.id }}</strong>.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white border-bottom">
+
+        <h3 class="card-title mb-0">
+
+            <i class="bi bi-motorcycle me-2 text-danger"></i>
+
+            Informações da motocicleta
+
+        </h3>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <form
+            action="{{ url_for('editarProduto', id=produto.id) }}"
+            method="POST"
+            enctype="multipart/form-data">
+
+            <div class="row g-3">
+
+                <!-- Nome -->
+
+                <div class="col-12">
+
+                    <label
+                        for="nome"
+                        class="form-label fw-semibold">
+
+                        Nome da Motocicleta
+
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nome"
+                        name="nome"
+                        value="{{ produto.nome }}"
+                        placeholder="Ex.: Honda CG 160 Titan"
+                        required>
+
+                    <div class="form-text">
+                        Informe o nome e modelo da motocicleta.
+                    </div>
+
+                </div>
+
+
+                <!-- Preço -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="preco"
+                        class="form-label fw-semibold">
+
+                        Preço
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            R$
+                        </span>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            class="form-control"
+                            id="preco"
+                            name="preco"
+                            value="{{ produto.preco }}"
+                            required>
+
+                    </div>
+
+                    <div class="form-text">
+                        Atualize o valor de venda da motocicleta.
+                    </div>
+
+                </div>
+
+
+                <!-- Categoria -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="id_categoria"
+                        class="form-label fw-semibold">
+
+                        Categoria
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        id="id_categoria"
+                        name="id_categoria"
+                        required>
+
+                        <option value="">
+                            Selecione uma categoria
+                        </option>
+
+                        {% for categoria in categorias %}
+
+                            <option
+                                value="{{ categoria.id }}"
+                                {% if categoria.id == produto.id_categoria %}
+                                    selected
+                                {% endif %}>
+
+                                {{ categoria.nome }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="ativo"
+                        class="form-label fw-semibold">
+
+                        Status no Catálogo
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        id="ativo"
+                        name="ativo">
+
+                        <option
+                            value="True"
+                            {% if produto.ativo == 'True' or produto.ativo == 1 %}
+                                selected
+                            {% endif %}>
+
+                            Ativa
+
+                        </option>
+
+                        <option
+                            value="False"
+                            {% if produto.ativo == 'False' or produto.ativo == 0 %}
+                                selected
+                            {% endif %}>
+
+                            Inativa
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Imagem atual -->
+
+                <div class="col-12">
+
+                    <label class="form-label fw-semibold">
+                        Foto Atual da Motocicleta
+                    </label>
+
+                    {% if produto.imagem %}
+
+                        <div class="mt-2 p-3 border rounded bg-light d-inline-block">
+
+                            <img
+                                src="data:image/jpeg;base64,{{ produto.imagem }}"
+                                class="img-thumbnail border-0"
+                                style="width: 260px; height: 190px; object-fit: cover;"
+                                alt="Imagem atual da motocicleta {{ produto.nome }}">
+
+                            <p class="text-body-secondary small mb-0 mt-2 text-center">
+                                Imagem cadastrada
+                            </p>
+
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="border rounded p-4 text-center
+                                   text-body-secondary">
+
+                            <i
+                                class="bi bi-image"
+                                style="font-size: 2.5rem;">
+                            </i>
+
+                            <p class="mb-0 mt-2">
+                                Nenhuma imagem cadastrada para esta motocicleta.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Nova imagem -->
+
+                <div class="col-12">
+
+                    <label
+                        for="imagem"
+                        class="form-label fw-semibold">
+
+                        Substituir Foto da Motocicleta
+
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        id="imagem"
+                        name="imagem"
+                        accept="image/*">
+
+                    <div class="form-text">
+                        Deixe em branco para manter a foto atual.
+                    </div>
+
+                </div>
+
+
+                <!-- Pré-visualização -->
+
+                <div class="col-12" id="preview-container" style="display: none;">
+
+                    <label class="form-label fw-semibold">
+                        Pré-visualização da nova foto
+                    </label>
+
+                    <div>
+
+                        <img
+                            id="preview-imagem"
+                            src=""
+                            alt="Pré-visualização da nova foto da motocicleta"
+                            class="img-thumbnail"
+                            style="width: 260px; height: 190px; object-fit: cover;">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Botões -->
+
+            <div class="d-flex flex-column flex-sm-row
+                        justify-content-end
+                        gap-2
+                        mt-4">
+
+                <a
+                    href="{{ url_for('listarProdutos') }}"
+                    class="btn btn-outline-secondary">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+
+                    Cancelar
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-danger">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Salvar Alterações
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    document.getElementById('imagem').addEventListener('change', function(event) {
+
+        const arquivo = event.target.files[0];
+
+        const previewContainer = document.getElementById('preview-container');
+
+        const previewImagem = document.getElementById('preview-imagem');
+
+        if (arquivo) {
+
+            const leitor = new FileReader();
+
+            leitor.onload = function(e) {
+
+                previewImagem.src = e.target.result;
+
+                previewContainer.style.display = 'block';
+
+            };
+
+            leitor.readAsDataURL(arquivo);
+
+        } else {
+
+            previewImagem.src = '';
+
+            previewContainer.style.display = 'none';
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

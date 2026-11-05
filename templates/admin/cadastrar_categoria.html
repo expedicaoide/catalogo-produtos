@@ -1,0 +1,346 @@
+
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<!-- CABEÇALHO DA PÁGINA -->
+
+<div class="d-flex flex-column flex-md-row
+            align-items-md-center justify-content-between
+            gap-3 mb-4">
+
+    <div>
+
+        <h1 class="mb-1 fw-bold">
+            <i class="bi bi-tags me-2" style="color: #d62828;"></i>
+            Cadastrar Categoria
+        </h1>
+
+        <p class="text-body-secondary mb-0">
+            Organize as motocicletas por categorias e estilos.
+        </p>
+
+    </div>
+
+    <a
+        href="{{ url_for('listarCategoria') }}"
+        class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Voltar às categorias
+
+    </a>
+
+</div>
+
+
+<!-- FORMULÁRIO -->
+
+<div class="card shadow-sm border-0">
+
+    <!-- CABEÇALHO DO CARD -->
+
+    <div class="card-header bg-white py-3">
+
+        <h3 class="card-title mb-0 fw-bold">
+
+            <i class="bi bi-plus-circle me-2"
+               style="color: #d62828;"></i>
+
+            Nova categoria
+
+        </h3>
+
+    </div>
+
+
+    <!-- CORPO DO CARD -->
+
+    <div class="card-body p-4">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data">
+
+            <div class="row g-4">
+
+                <!-- NOME DA CATEGORIA -->
+
+                <div class="col-12">
+
+                    <label
+                        for="nome_categoria"
+                        class="form-label fw-semibold">
+
+                        Nome da categoria
+
+                        <span class="text-danger">*</span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text bg-light">
+
+                            <i class="bi bi-tag"
+                               style="color: #d62828;"></i>
+
+                        </span>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="nome_categoria"
+                            name="nome_categoria"
+                            placeholder="Ex.: Street, Sport, Trail, Scooter..."
+                            required>
+
+                    </div>
+
+                    <div class="form-text">
+                        Informe o nome do segmento ou estilo das motocicletas.
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIÇÃO -->
+
+                <div class="col-12">
+
+                    <label
+                        for="descricao"
+                        class="form-label fw-semibold">
+
+                        Descrição da categoria
+
+                        <span class="text-danger">*</span>
+
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        id="descricao"
+                        name="descricao"
+                        rows="4"
+                        placeholder="Descreva as características desta categoria de motocicletas..."
+                        required></textarea>
+
+                    <div class="form-text">
+                        Apresente as principais características das motos
+                        pertencentes a esta categoria.
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="ativo"
+                        class="form-label fw-semibold">
+
+                        Status da categoria
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        id="ativo"
+                        name="ativo">
+
+                        <option value="True">
+                            Ativo
+                        </option>
+
+                        <option value="False">
+                            Inativo
+                        </option>
+
+                    </select>
+
+                    <div class="form-text">
+                        Categorias inativas não devem ser utilizadas
+                        em novos cadastros.
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGEM -->
+
+                <div class="col-12 col-md-6">
+
+                    <label
+                        for="imagem"
+                        class="form-label fw-semibold">
+
+                        Imagem da categoria
+
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        id="imagem"
+                        name="imagem"
+                        accept="image/*">
+
+                    <div class="form-text">
+                        Selecione uma imagem que represente o estilo
+                        das motocicletas.
+                    </div>
+
+                </div>
+
+
+                <!-- PRÉVIA DA IMAGEM -->
+
+                <div class="col-12">
+
+                    <div
+                        id="preview-container"
+                        class="d-none mt-2">
+
+                        <label class="form-label fw-semibold">
+                            Pré-visualização da imagem
+                        </label>
+
+                        <div class="border rounded-3 p-3 bg-light">
+
+                            <img
+                                id="preview-imagem"
+                                src=""
+                                alt="Prévia da imagem da categoria"
+                                class="img-fluid rounded"
+                                style="max-height: 220px; object-fit: contain;">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DIVISOR -->
+
+            <hr class="my-4">
+
+
+            <!-- BOTÕES -->
+
+            <div class="d-flex flex-column flex-sm-row
+                        justify-content-end
+                        gap-2">
+
+                <a
+                    href="{{ url_for('listarCategoria') }}"
+                    class="btn btn-outline-secondary">
+
+                    <i class="bi bi-x-circle me-1"></i>
+
+                    Cancelar
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary px-4">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Cadastrar categoria
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- INFORMAÇÕES AUXILIARES -->
+
+<div class="alert alert-light border mt-4">
+
+    <div class="d-flex gap-3 align-items-start">
+
+        <i
+            class="bi bi-info-circle fs-4"
+            style="color: #d62828;"></i>
+
+        <div>
+
+            <strong>Orientação para cadastro</strong>
+
+            <p class="mb-0 text-body-secondary small">
+
+                Cadastre categorias que facilitem a organização
+                das motocicletas, como Street, Trail, Sport,
+                Scooter, Custom e Touring.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PRÉ-VISUALIZAÇÃO DA IMAGEM -->
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const inputImagem = document.getElementById('imagem');
+
+        const previewContainer =
+            document.getElementById('preview-container');
+
+        const previewImagem =
+            document.getElementById('preview-imagem');
+
+        inputImagem.addEventListener('change', function () {
+
+            const arquivo = this.files[0];
+
+            if (arquivo && arquivo.type.startsWith('image/')) {
+
+                const leitor = new FileReader();
+
+                leitor.onload = function (e) {
+
+                    previewImagem.src = e.target.result;
+
+                    previewContainer.classList.remove('d-none');
+
+                };
+
+                leitor.readAsDataURL(arquivo);
+
+            } else {
+
+                previewImagem.src = '';
+
+                previewContainer.classList.add('d-none');
+
+            }
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}
